@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import { IoMdSwap } from "react-icons/io";
-import { FaUpload } from "react-icons/fa";
 
 const CurrencyConverter = () => {
   //https://api.frankfurter.app/currencies
@@ -13,17 +12,13 @@ const CurrencyConverter = () => {
   const [to, setTo] = useState("INR");
   const [convertedAmount, setConvertedAmount] = useState(null);
   const [converting, setConverting] = useState(false);
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || ["INR"]
-  );
-
+  
   const fetchcurrencies = async () => {
     try {
       const res = await fetch("https://api.frankfurter.app/currencies");
       const data = await res.json();
 
-      setCurrencies(Object.keys(data));
-      console.log(Object.keys(data));
+      setCurrencies(Object.keys(data)); 
     } catch (error) {
       console.error("Error Fetching", error);
     }
@@ -32,8 +27,6 @@ const CurrencyConverter = () => {
   useEffect(() => {
     fetchcurrencies();
   }, []);
-
-  console.log(currencies);
 
   const currencyConverter = async () => {
     if (!amount) return;
@@ -52,24 +45,10 @@ const CurrencyConverter = () => {
     }
   };
 
-  const handlefavorite = (currency) => {
-    let updatesFav = [...favorites];
-
-    if(favorites.includes(currency)){
-        updatesFav = updatesFav.filter((fav) => fav !== currency)
-    }
-    else{
-        updatesFav = updatesFav.push(currency);
-    }
-    setFavorites(updatesFav);
-    localStorage.setItem("favorites",JSON.stringify(updatesFav));
-  };
-
   const swapCurrencies = () => {
     setFrom(to);
     setTo(from);
   };
-
   return (
     <div className="max-w-xl mx-auto my-10 p-5 bg-white rounded-lg shadow-md">
       <h2 className="mb-5 font-semibold text-gray-700 text-2xl">
@@ -78,10 +57,9 @@ const CurrencyConverter = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-3">
         <Dropdown
-          favorites={favorites}
+          
           currencies={currencies}
           title="From : "
-          handlefavorite={handlefavorite}
           currency={from}
           setCurrency={setFrom}
         />
@@ -96,10 +74,8 @@ const CurrencyConverter = () => {
         </div>
 
         <Dropdown
-          favorites={favorites}
           currencies={currencies}
           title="To : "
-          handlefavorite={handlefavorite}
           currency={to}
           setCurrency={setTo}
         />
